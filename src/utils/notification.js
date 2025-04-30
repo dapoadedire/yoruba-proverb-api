@@ -1,7 +1,7 @@
 const axios = require("axios");
 require("dotenv").config();
 
-async function notifyUsage(userId, username, endpoint) {
+async function notifyUsage(userId, username, endpoint, geoData = null) {
   // Return immediately and let the notification happen in the background
   return Promise.resolve().then(async () => {
     try {
@@ -18,8 +18,17 @@ async function notifyUsage(userId, username, endpoint) {
         );
       }
 
+      let messageText = `User ${username} (${userId}) used endpoint: ${endpoint}`;
+
+      // Add geographical information if available
+      if (geoData) {
+        messageText += `\nLocation: ${geoData.city || "Unknown"}, ${
+          geoData.region || "Unknown"
+        }, ${geoData.country || "Unknown"}`;
+        messageText += `\nTimezone: ${geoData.timezone || "Unknown"}`;
+      }
+
       const apiUrl = `https://api.telegram.org/bot${apiToken}/sendMessage`;
-      const messageText = `User ${username} (${userId}) used endpoint: ${endpoint}`;
 
       const response = await axios.post(apiUrl, {
         chat_id: personalChatId,

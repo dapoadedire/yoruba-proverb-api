@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
+const geoip = require("geoip-lite");
 require("dotenv").config();
 const { notifyUsage } = require("./utils/notification");
 
@@ -24,8 +25,11 @@ try {
     const userId = req.ip;
     const username = req.get("User-Agent") || "Unknown";
 
+    // Get geolocation data from IP
+    const geo = geoip.lookup(userId);
+
     // Notify about API usage asynchronously - don't wait for the result
-    notifyUsage(userId, username, "GET /");
+    notifyUsage(userId, username, "GET /", geo);
 
     res.json({ message: "Welcome to the Yoruba Proverbs API!" });
   });
@@ -35,8 +39,11 @@ try {
     const userId = req.ip;
     const username = req.get("User-Agent") || "Unknown";
 
+    // Get geolocation data from IP
+    const geo = geoip.lookup(userId);
+
     // Notify about API usage asynchronously
-    notifyUsage(userId, username, "GET /proverb");
+    notifyUsage(userId, username, "GET /proverb", geo);
 
     const random = proverbs[Math.floor(Math.random() * proverbs.length)];
     res.json(random);
@@ -48,8 +55,11 @@ try {
     const username = req.get("User-Agent") || "Unknown";
     const id = parseInt(req.params.id);
 
+    // Get geolocation data from IP
+    const geo = geoip.lookup(userId);
+
     // Notify about API usage asynchronously
-    notifyUsage(userId, username, `GET /proverb/${id}`);
+    notifyUsage(userId, username, `GET /proverb/${id}`, geo);
 
     const proverb = proverbs.find((p) => p.id === id);
 
