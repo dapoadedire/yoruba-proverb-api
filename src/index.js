@@ -3,6 +3,8 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
+require("dotenv").config();
+const { notifyUsage } = require("./utils/notification");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,18 +21,36 @@ try {
 
   // API routes
   app.get("/", (req, res) => {
+    const userId = req.ip;
+    const username = req.get("User-Agent") || "Unknown";
+
+    // Notify about API usage asynchronously - don't wait for the result
+    notifyUsage(userId, username, "GET /");
+
     res.json({ message: "Welcome to the Yoruba Proverbs API!" });
   });
 
   // Random proverb route
   app.get("/proverb", (req, res) => {
+    const userId = req.ip;
+    const username = req.get("User-Agent") || "Unknown";
+
+    // Notify about API usage asynchronously
+    notifyUsage(userId, username, "GET /proverb");
+
     const random = proverbs[Math.floor(Math.random() * proverbs.length)];
     res.json(random);
   });
 
   // Get proverb by ID
   app.get("/proverb/:id", (req, res) => {
+    const userId = req.ip;
+    const username = req.get("User-Agent") || "Unknown";
     const id = parseInt(req.params.id);
+
+    // Notify about API usage asynchronously
+    notifyUsage(userId, username, `GET /proverb/${id}`);
+
     const proverb = proverbs.find((p) => p.id === id);
 
     if (!proverb) {
