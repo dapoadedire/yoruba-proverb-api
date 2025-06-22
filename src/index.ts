@@ -60,6 +60,24 @@ const subscribeLimiter = rateLimit({
   },
 });
 
+// Define or extend the type for the response from resend.contacts.get
+interface ContactResponse {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  unsubscribed: boolean;
+  // Add other properties if needed
+}
+
+// Fallback type definition for GetContactResponse
+interface GetContactResponse {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  unsubscribed?: boolean;
+  // Add other properties if needed
+}
+
 // Routes
 app.get("/", (_req: Request, res: Response) => {
   res.json({ message: "Welcome to the Yoruba Proverbs API!" });
@@ -122,6 +140,43 @@ app.post(
     const { email, name } = result.data;
 
     try {
+      // Check if the email already exists using resend.contacts.get
+      // Cast the response from resend.contacts.get to the ContactResponse type
+      // Safely map the response to the ContactResponse type
+
+      const rawContact = (await resend.contacts.get({
+        email,
+        audienceId: audienceId ?? "",
+      })) as GetContactResponse | null;
+
+      const existingContact: ContactResponse | null = rawContact
+        ? {
+            email: rawContact.email ?? "",
+            firstName: rawContact.firstName,
+            lastName: rawContact.lastName,
+            unsubscribed: rawContact.unsubscribed ?? false,
+          }
+        : null;
+
+      if (existingContact) {
+        if (existingContact.unsubscribed) {
+          // Resubscribe the user
+          await resend.contacts.update({
+            email,
+            audienceId: audienceId ?? "",
+            unsubscribed: false,
+          });
+        }
+
+        res.status(200).json({
+          message: existingContact.unsubscribed
+            ? "Resubscribed successfully"
+            : "This email is already subscribed.",
+        });
+        return;
+      }
+
+      // Only create if contact doesn't exist
       await resend.contacts.create({
         email,
         firstName: name,
