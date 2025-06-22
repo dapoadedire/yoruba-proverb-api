@@ -34,7 +34,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // Load proverbs data
-const filePath = path.join(__dirname, "../assets/proverbs.json");
+const filePath = path.join(__dirname, "assets/proverbs.json");
 let proverbs: Proverb[] = [];
 
 try {
