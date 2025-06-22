@@ -69,9 +69,28 @@ app.post("/subscribe", async (req: Request, res: Response) => {
   const result = SubscribeSchema.safeParse(req.body);
 
   if (!result.success) {
+    // Extract validation errors and format them in a more user-friendly way
+    const formattedErrors: Record<string, string> = {};
+    const errorFormat = result.error.format();
+
+    // Process each field with errors
+    for (const field in errorFormat) {
+      if (field !== "_errors") {
+        // TypeScript safe way to access nested error messages
+        const fieldErrors = errorFormat[field as keyof typeof errorFormat];
+
+        if (typeof fieldErrors === "object" && "_errors" in fieldErrors) {
+          const errors = fieldErrors._errors;
+          if (errors.length > 0) {
+            formattedErrors[field] = errors[0]; // Take first error message for each field
+          }
+        }
+      }
+    }
+
     res.status(400).json({
       error: "Invalid input",
-      details: result.error.format(),
+      details: formattedErrors,
     });
     return;
   }
