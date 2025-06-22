@@ -11,12 +11,21 @@ import rateLimit from "express-rate-limit";
 // Internal imports
 import { Proverb, ProverbsData } from "./types/proverb";
 import { SubscribeSchema } from "./types/schema";
+import {
+  sendWelcomeEmail,
+  sendProverbEmail,
+  sendBatchEmails,
+  unsubscribeUser,
+  createWeeklyBroadcast,
+  sendBroadcast,
+} from "./utils/email";
 
 // Config
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 const resendApiKey = process.env.RESEND_API_KEY;
 const audienceId = process.env.AUDIENCE_ID;
+const apiBaseUrl = process.env.API_BASE_URL || `http://localhost:${PORT}`;
 
 // Init app
 const app = express();
@@ -120,6 +129,13 @@ app.post(
         audienceId: audienceId ?? "",
       });
 
+      // Get a random proverb for the welcome email
+      const randomProverb =
+        proverbs[Math.floor(Math.random() * proverbs.length)];
+
+      // Send welcome email
+      await sendWelcomeEmail(email, name, randomProverb);
+
       res.status(201).json({ message: "Subscription successful" });
     } catch (err) {
       console.error("Subscribe error:", err);
@@ -127,6 +143,104 @@ app.post(
     }
   }
 );
+
+// Route for unsubscribing from emails
+app.get("/unsubscribe", async (req: Request, res: Response) => {
+  const email = req.query.email as string;
+
+  if (!email) {
+    res.status(400).json({ error: "Email is required" });
+    return;
+  }
+
+  try {
+    // Use the dedicated utility function to unsubscribe the user
+    const success = await unsubscribeUser(email);
+
+    if (!success) {
+      throw new Error("Failed to unsubscribe");
+    }
+
+    // Respond with a simple HTML page
+    res.send(`
+      <html>
+        <body style="font-family: Arial, sans-serif; text-align: center; padding: 40px;">
+          <h1>Unsubscribed Successfully</h1>
+          <p>You have been unsubscribed from the Yoruba Proverbs email list.</p>
+          <p>We're sorry to see you go!</p>
+        </body>
+      </html>
+    `);
+  } catch (err) {
+    console.error("Unsubscribe error:", err);
+    res.status(500).json({ error: "Failed to unsubscribe" });
+  }
+});
+
+// Admin route for creating a weekly proverb broadcast
+app.post("/admin/create-broadcast", async (req: Request, res: Response) => {
+  // Authenticate request
+  const apiKey = req.headers["x-api-key"];
+
+  if (!apiKey || apiKey !== process.env.ADMIN_API_KEY) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  try {
+    // Get a random proverb or use the one from request body
+    const proverb = proverbs[Math.floor(Math.random() * proverbs.length)];
+
+    // Create the broadcast
+    const broadcastId = await createWeeklyBroadcast(proverb);
+
+    if (!broadcastId) {
+      res.status(500).json({ error: "Failed to create broadcast" });
+      return;
+    }
+
+    res.json({
+      message: "Weekly proverb broadcast created successfully",
+      broadcastId,
+    });
+  } catch (err) {
+    console.error("Error creating broadcast:", err);
+    res.status(500).json({ error: "Failed to create broadcast" });
+  }
+});
+
+// Admin route for sending a created broadcast
+app.post("/admin/send-broadcast/:id", async (req: Request, res: Response) => {
+  // Authenticate request
+  const apiKey = req.headers["x-api-key"];
+
+  if (!apiKey || apiKey !== process.env.ADMIN_API_KEY) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const broadcastId = req.params.id;
+  const scheduledAt = req.body?.scheduledAt; // Optional: 'in 1 min', '2023-04-01T12:00:00Z'
+
+  try {
+    const success = await sendBroadcast(broadcastId, scheduledAt);
+
+    if (!success) {
+      res.status(500).json({ error: "Failed to send broadcast" });
+      return;
+    }
+
+    res.json({
+      message: scheduledAt
+        ? `Broadcast scheduled successfully for ${scheduledAt}`
+        : "Broadcast sent successfully",
+      broadcastId,
+    });
+  } catch (err) {
+    console.error("Error sending broadcast:", err);
+    res.status(500).json({ error: "Failed to send broadcast" });
+  }
+});
 
 // Start server
 app.listen(PORT, () => {

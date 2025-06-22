@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Your Weekly Yoruba Proverb</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        text-align: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+      }
+      .proverb {
+        margin: 30px 0;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-left: 4px solid #5a6f8d;
+      }
+      .yoruba {
+        font-style: italic;
+        color: #5a6f8d;
+        font-size: 18px;
+      }
+      .translation {
+        margin-top: 10px;
+        font-size: 16px;
+      }
+      .wisdom {
+        margin-top: 15px;
+        font-weight: bold;
+      }
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 12px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Your Weekly Yoruba Proverb</h1>
+    </div>
+
+    <p>Hello {{name}},</p>
+
+    <p>Here's your Saturday dose of Yoruba wisdom for this week:</p>
+
+    <div class="proverb">
+      <div class="yoruba">{{proverb}}</div>
+      <div class="translation">{{translation}}</div>
+      <div class="wisdom">Wisdom: {{wisdom}}</div>
+    </div>
+
+    <p>
+      I hope this proverb brings insight to your week ahead. Look forward to
+      another proverb next Saturday.
+    </p>
+
+    <p>Best regards,<br />Adedapo Adedire</p>
+
+    <div class="footer">
+      <p>
+        If you wish to unsubscribe, <a href="{{unsubscribeUrl}}">click here</a>.
+      </p>
+    </div>
+  </body>
+</html>

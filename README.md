@@ -11,6 +11,9 @@ This API serves traditional Yoruba proverbs from Nigeria, complete with English 
 - Get a random proverb
 - Fetch a specific proverb by ID
 - JSON response format with proverb text, translation, and wisdom explanation
+- Email subscription for receiving proverbs
+- Welcome emails for new subscribers
+- Batch email delivery of proverbs to subscribers
 
 ## Tech Stack
 
@@ -29,11 +32,14 @@ http://localhost:3000
 
 ### Routes
 
-| Method | Endpoint       | Description                    |
-| ------ | -------------- | ------------------------------ |
-| GET    | `/`            | Welcome message                |
-| GET    | `/proverb`     | Fetch a random proverb         |
-| GET    | `/proverb/:id` | Fetch a specific proverb by ID |
+| Method | Endpoint              | Description                                  |
+| ------ | --------------------- | -------------------------------------------- |
+| GET    | `/`                   | Welcome message                              |
+| GET    | `/proverb`            | Fetch a random proverb                       |
+| GET    | `/proverb/:id`        | Fetch a specific proverb by ID               |
+| POST   | `/subscribe`          | Subscribe to receive proverb emails          |
+| GET    | `/unsubscribe`        | Unsubscribe from proverb emails              |
+| POST   | `/admin/send-proverb` | Send proverbs to all subscribers (protected) |
 
 ### Response Format
 
@@ -45,6 +51,23 @@ http://localhost:3000
   "wisdom": "Adversities often show true friends."
 }
 ```
+
+### Subscription Request Format
+
+```json
+{
+  "email": "user@example.com",
+  "name": "John Doe"
+}
+```
+
+### Email Features
+
+The API includes email functionality using Resend:
+
+1. **Welcome Emails**: New subscribers receive a welcome email with a random Yoruba proverb.
+2. **Weekly Proverbs**: Admin can send batch emails with proverbs to all active subscribers every Saturday.
+3. **Unsubscribe Functionality**: Users can easily unsubscribe using a link in every email.
 
 ## Getting Started
 
@@ -123,3 +146,16 @@ This project is licensed under the ISC License - see the package.json file for d
 
 - Thanks to all contributors who add and verify proverbs
 - Inspired by the rich cultural heritage of the Yoruba people
+
+### Environment Variables
+
+Create a `.env` file based on `.env.example` with the following variables:
+
+```
+PORT=3000
+API_BASE_URL=http://localhost:3000
+RESEND_API_KEY=your_resend_api_key_here
+AUDIENCE_ID=your_audience_id_here
+EMAIL_FROM=Yoruba Proverbs <proverbs@yourubaproverbs.com>
+ADMIN_API_KEY=your_secure_admin_api_key_here
+```
