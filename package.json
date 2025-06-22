@@ -23,7 +23,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "resend": "^4.6.0",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
