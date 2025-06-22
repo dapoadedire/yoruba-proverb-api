@@ -166,13 +166,10 @@ app.post(
             audienceId: audienceId ?? "",
             unsubscribed: false,
           });
+          res.status(200).json({ message: "Resubscribed successfully" });
+        } else {
+          res.status(200).json({ error: "This email is already subscribed." });
         }
-
-        res.status(200).json({
-          message: existingContact.unsubscribed
-            ? "Resubscribed successfully"
-            : "This email is already subscribed.",
-        });
         return;
       }
 
