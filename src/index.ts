@@ -7,6 +7,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import { Resend } from "resend";
 import rateLimit from "express-rate-limit";
+import cron from "node-cron";
 
 // Internal imports
 import { Proverb, ProverbsData } from "./types/proverb";
@@ -14,6 +15,7 @@ import { SubscribeSchema } from "./types/schema";
 import {
   sendWelcomeEmail,
   sendProverbEmail,
+  sendDailyProverbEmail,
   sendBatchEmails,
   unsubscribeUser,
   createWeeklyBroadcast,
@@ -297,4 +299,75 @@ app.post("/admin/send-broadcast/:id", async (req: Request, res: Response) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`Yoruba Proverbs API running on port ${PORT}`);
+
+  // Set up the scheduled tasks after server starts
+  setupScheduledTasks();
 });
+
+// Setup scheduled tasks for automated emails
+function setupScheduledTasks() {
+  // Schedule weekly broadcast every Saturday at 4 PM
+  // Cron format: minute hour day-of-month month day-of-week
+  cron.schedule(
+    "0 16 * * 6",
+    async () => {
+      console.log("Running scheduled weekly broadcast - Saturday 4 PM");
+      try {
+        // Get a random proverb for the weekly broadcast
+        const randomProverb =
+          proverbs[Math.floor(Math.random() * proverbs.length)];
+
+        // Create and send the broadcast immediately
+        const broadcastId = await createWeeklyBroadcast(randomProverb);
+
+        if (broadcastId) {
+          await sendBroadcast(broadcastId);
+          console.log(
+            `Weekly broadcast created and sent successfully at ${new Date().toISOString()}`
+          );
+        } else {
+          console.error("Failed to create weekly broadcast");
+        }
+      } catch (error) {
+        console.error("Error in weekly scheduled task:", error);
+      }
+    },
+    {
+      timezone: "Africa/Lagos", // Set to appropriate timezone
+    }
+  );
+
+  // Schedule daily morning proverb to specific email address (9 AM)
+  cron.schedule(
+    "0 9 * * *",
+    async () => {
+      console.log("Running scheduled daily proverb email");
+      try {
+        const email = "adedireadedapo19@gmail.com";
+        const name = "Adedapo"; // Default name for the daily email
+
+        // Get a random proverb for the daily email
+        const randomProverb =
+          proverbs[Math.floor(Math.random() * proverbs.length)];
+
+        // Send the daily email
+        const success = await sendDailyProverbEmail(email, name, randomProverb);
+
+        if (success) {
+          console.log(
+            `Daily proverb email sent successfully to ${email} at ${new Date().toISOString()}`
+          );
+        } else {
+          console.error(`Failed to send daily proverb email to ${email}`);
+        }
+      } catch (error) {
+        console.error("Error in daily proverb scheduled task:", error);
+      }
+    },
+    {
+      timezone: "Africa/Lagos", // Set to appropriate timezone
+    }
+  );
+
+  console.log("Scheduled tasks setup completed.");
+}

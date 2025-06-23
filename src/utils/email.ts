@@ -118,6 +118,45 @@ export async function sendProverbEmail(
   }
 }
 
+// Send daily proverb email
+export async function sendDailyProverbEmail(
+  email: string,
+  name: string,
+  proverb: Proverb
+): Promise<boolean> {
+  try {
+    const unsubscribeUrl = `${process.env.API_BASE_URL}/unsubscribe?email=${encodeURIComponent(email)}`;
+
+    const htmlContent = compileTemplate("daily-proverb", {
+      name,
+      proverb: proverb.proverb,
+      translation: proverb.translation,
+      wisdom: proverb.wisdom,
+      unsubscribeUrl,
+    });
+
+    const { data, error } = await resend.emails.send({
+      from:
+        process.env.EMAIL_FROM ||
+        "Yoruba Proverbs <yorubaproverbs@dapoadedire.xyz>",
+      to: [email],
+      subject: "Your Daily Yoruba Proverb - Morning Wisdom",
+      html: htmlContent,
+    });
+
+    if (error) {
+      console.error("Error sending daily proverb email:", error);
+      return false;
+    }
+
+    console.log("Daily proverb email sent successfully:", data?.id);
+    return true;
+  } catch (error) {
+    console.error("Error sending daily proverb email:", error);
+    return false;
+  }
+}
+
 // Send batch emails to all subscribers
 export async function sendBatchEmails(
   contacts: Array<{ email: string; firstName: string }>,
