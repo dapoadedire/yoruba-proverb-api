@@ -99,7 +99,7 @@ export async function sendProverbEmail(
     const { data, error } = await resend.emails.send({
       from:
         process.env.EMAIL_FROM ||
-        "Yoruba Proverbs <proverbs@yourubaproverbs.com>",
+        "Yoruba Proverbs <yorubaproverbs@dapoadedire.xyz>",
       to: [email],
       subject: "Your Weekly Yoruba Proverb - Saturday Wisdom",
       html: htmlContent,

@@ -48,7 +48,22 @@ try {
   process.exit(1);
 }
 
-// Init Resend
+// Init Resend with validation
+if (!resendApiKey) {
+  console.error("CRITICAL ERROR: Resend API key is missing or invalid");
+  process.exit(1);
+}
+
+if (!audienceId) {
+  console.error(
+    "WARNING: Audience ID is missing - contact operations will fail"
+  );
+}
+
+console.log(
+  "Initializing Resend client with API key:",
+  resendApiKey?.substring(0, 8) + "..."
+);
 const resend = new Resend(resendApiKey);
 
 // Rate limiter middleware for the subscribe endpoint
@@ -146,17 +161,21 @@ app.post(
       // Cast the response from resend.contacts.get to the ContactResponse type
       // Safely map the response to the ContactResponse type
 
-      const rawContact = (await resend.contacts.get({
+      const rawContact = await resend.contacts.get({
         email,
         audienceId: audienceId ?? "",
-      })) as GetContactResponse | null;
+      });
 
-      const existingContact: ContactResponse | null = rawContact
+      console.log("Raw contact response:", rawContact);
+
+      // Check if the contact exists by examining the response structure
+      // A successful response has data, a failed lookup has error with statusCode 404
+      const existingContact: ContactResponse | null = rawContact.data
         ? {
-            email: rawContact.email ?? "",
-            firstName: rawContact.firstName,
-            lastName: rawContact.lastName,
-            unsubscribed: rawContact.unsubscribed ?? false,
+            email: rawContact.data.email ?? "",
+            firstName: rawContact.data.first_name, // Note the snake_case in API response
+            lastName: rawContact.data.last_name, // Note the snake_case in API response
+            unsubscribed: rawContact.data.unsubscribed ?? false,
           }
         : null;
 
@@ -187,10 +206,20 @@ app.post(
       const randomProverb =
         proverbs[Math.floor(Math.random() * proverbs.length)];
 
-      // Send welcome email
-      await sendWelcomeEmail(email, name, randomProverb);
+      // Send welcome email and capture the result
+      const emailSent = await sendWelcomeEmail(email, name, randomProverb);
+      console.log("Welcome email send result:", emailSent);
 
-      res.status(201).json({ message: "Subscription successful" });
+      if (!emailSent) {
+        console.error(`Failed to send welcome email to: ${email}`);
+        // Still return success but with a warning
+        res.status(201).json({
+          message:
+            "Subscription successful, but welcome email could not be sent. You will receive future emails.",
+        });
+      } else {
+        res.status(201).json({ message: "Subscription successful" });
+      }
     } catch (err) {
       console.error("Subscribe error:", err);
       res.status(500).json({ error: "Failed to subscribe" });
@@ -300,9 +329,12 @@ app.post("/admin/send-broadcast/:id", async (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`Yoruba Proverbs API running on port ${PORT}`);
 
+
   // Set up the scheduled tasks after server starts
   setupScheduledTasks();
 });
+
+// Function to verify the Resend API key is val
 
 // Setup scheduled tasks for automated emails
 function setupScheduledTasks() {
