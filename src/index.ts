@@ -341,9 +341,9 @@ function setupScheduledTasks() {
   // Schedule weekly broadcast every Saturday at 4 PM
   // Cron format: minute hour day-of-month month day-of-week
   cron.schedule(
-    "0 16 * * 6",
+    "0 10 * * 6",
     async () => {
-      console.log("Running scheduled weekly broadcast - Saturday 4 PM");
+      console.log("Running scheduled weekly broadcast - Saturday 10 AM");
       try {
         // Get a random proverb for the weekly broadcast
         const randomProverb =
