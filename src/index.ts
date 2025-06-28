@@ -369,9 +369,9 @@ function setupScheduledTasks() {
     }
   );
 
-  // Schedule daily morning proverb to specific email address (9 AM)
+  // Schedule daily morning proverb to specific email address (11 AM)
   cron.schedule(
-    "0 9 * * *",
+    "0 11 * * *",
     async () => {
       console.log("Running scheduled daily proverb email");
       try {
