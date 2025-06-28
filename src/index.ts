@@ -338,12 +338,12 @@ app.listen(PORT, () => {
 
 // Setup scheduled tasks for automated emails
 function setupScheduledTasks() {
-  // Schedule weekly broadcast every Saturday at 4 PM
+  // Schedule weekly broadcast every Saturday at 11 AM
   // Cron format: minute hour day-of-month month day-of-week
   cron.schedule(
-    "0 10 * * 6",
+    "0 11 * * 6",
     async () => {
-      console.log("Running scheduled weekly broadcast - Saturday 10 AM");
+      console.log("Running scheduled weekly broadcast - Saturday 11 AM");
       try {
         // Get a random proverb for the weekly broadcast
         const randomProverb =
