@@ -7,7 +7,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import { Resend } from "resend";
 import rateLimit from "express-rate-limit";
-import cron from "node-cron";
+import { Cron } from "croner";
 
 // Internal imports
 import { Proverb, ProverbsData } from "./types/proverb";
@@ -329,7 +329,6 @@ app.post("/admin/send-broadcast/:id", async (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`Yoruba Proverbs API running on port ${PORT}`);
 
-
   // Set up the scheduled tasks after server starts
   setupScheduledTasks();
 });
@@ -340,8 +339,11 @@ app.listen(PORT, () => {
 function setupScheduledTasks() {
   // Schedule weekly broadcast every Saturday at 10 AM
   // Cron format: minute hour day-of-month month day-of-week
-  cron.schedule(
+  new Cron(
     "0 11 * * 6",
+    {
+      timezone: "Africa/Lagos", // Set to appropriate timezone
+    },
     async () => {
       console.log("Running scheduled weekly broadcast - Saturday 10 AM");
       try {
@@ -363,15 +365,15 @@ function setupScheduledTasks() {
       } catch (error) {
         console.error("Error in weekly scheduled task:", error);
       }
-    },
-    {
-      timezone: "Africa/Lagos", // Set to appropriate timezone
     }
   );
 
-  // Schedule daily morning proverb to specific email address (11:30 AM Lagos time)
-  cron.schedule(
-    "0 10 * * *",
+  // Schedule daily morning proverb to specific email address (at 6:40 PM)
+  new Cron(
+    "35 18 * * *",
+    {
+      timezone: "Africa/Lagos", // Set to appropriate timezone
+    },
     async () => {
       console.log("Running scheduled daily proverb email");
       try {
@@ -395,9 +397,6 @@ function setupScheduledTasks() {
       } catch (error) {
         console.error("Error in daily proverb scheduled task:", error);
       }
-    },
-    {
-      timezone: "Africa/Lagos", // Set to appropriate timezone
     }
   );
 
