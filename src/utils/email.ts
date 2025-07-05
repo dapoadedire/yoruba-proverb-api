@@ -79,44 +79,6 @@ export async function sendWelcomeEmail(
   }
 }
 
-// Send weekly proverb email
-export async function sendProverbEmail(
-  email: string,
-  name: string,
-  proverb: Proverb
-): Promise<boolean> {
-  try {
-    const unsubscribeUrl = `${process.env.API_BASE_URL}/unsubscribe?email=${encodeURIComponent(email)}`;
-
-    const htmlContent = compileTemplate("weekly-proverb", {
-      name,
-      proverb: proverb.proverb,
-      translation: proverb.translation,
-      wisdom: proverb.wisdom,
-      unsubscribeUrl,
-    });
-
-    const { data, error } = await resend.emails.send({
-      from:
-        process.env.EMAIL_FROM ||
-        "Yoruba Proverbs <yorubaproverbs@dapoadedire.xyz>",
-      to: [email],
-      subject: "Your Weekly Yoruba Proverb - Saturday Wisdom",
-      html: htmlContent,
-    });
-
-    if (error) {
-      console.error("Error sending proverb email:", error);
-      return false;
-    }
-
-    console.log("Proverb email sent successfully:", data?.id);
-    return true;
-  } catch (error) {
-    console.error("Error sending proverb email:", error);
-    return false;
-  }
-}
 
 // Send daily proverb email
 export async function sendDailyProverbEmail(
@@ -157,33 +119,7 @@ export async function sendDailyProverbEmail(
   }
 }
 
-// Send batch emails to all subscribers
-export async function sendBatchEmails(
-  contacts: Array<{ email: string; firstName: string }>,
-  proverb: Proverb
-): Promise<{ success: number; failed: number }> {
-  let successCount = 0;
-  let failedCount = 0;
 
-  for (const contact of contacts) {
-    const success = await sendProverbEmail(
-      contact.email,
-      contact.firstName || "Subscriber",
-      proverb
-    );
-
-    if (success) {
-      successCount++;
-    } else {
-      failedCount++;
-    }
-
-    // Add a small delay between emails to avoid rate limits
-    await new Promise((resolve) => setTimeout(resolve, 200));
-  }
-
-  return { success: successCount, failed: failedCount };
-}
 
 // Create a weekly proverb broadcast
 export async function createWeeklyBroadcast(

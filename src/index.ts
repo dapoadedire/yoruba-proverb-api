@@ -14,9 +14,7 @@ import { Proverb, ProverbsData } from "./types/proverb";
 import { SubscribeSchema } from "./types/schema";
 import {
   sendWelcomeEmail,
-  sendProverbEmail,
   sendDailyProverbEmail,
-  sendBatchEmails,
   unsubscribeUser,
   createWeeklyBroadcast,
   sendBroadcast,
@@ -260,70 +258,6 @@ app.get("/unsubscribe", async (req: Request, res: Response) => {
   }
 });
 
-// Admin route for creating a weekly proverb broadcast
-app.post("/admin/create-broadcast", async (req: Request, res: Response) => {
-  // Authenticate request
-  const apiKey = req.headers["x-api-key"];
-
-  if (!apiKey || apiKey !== process.env.ADMIN_API_KEY) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-
-  try {
-    // Get a random proverb or use the one from request body
-    const proverb = proverbs[Math.floor(Math.random() * proverbs.length)];
-
-    // Create the broadcast
-    const broadcastId = await createWeeklyBroadcast(proverb);
-
-    if (!broadcastId) {
-      res.status(500).json({ error: "Failed to create broadcast" });
-      return;
-    }
-
-    res.json({
-      message: "Weekly proverb broadcast created successfully",
-      broadcastId,
-    });
-  } catch (err) {
-    console.error("Error creating broadcast:", err);
-    res.status(500).json({ error: "Failed to create broadcast" });
-  }
-});
-
-// Admin route for sending a created broadcast
-app.post("/admin/send-broadcast/:id", async (req: Request, res: Response) => {
-  // Authenticate request
-  const apiKey = req.headers["x-api-key"];
-
-  if (!apiKey || apiKey !== process.env.ADMIN_API_KEY) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-
-  const broadcastId = req.params.id;
-  const scheduledAt = req.body?.scheduledAt; // Optional: 'in 1 min', '2023-04-01T12:00:00Z'
-
-  try {
-    const success = await sendBroadcast(broadcastId, scheduledAt);
-
-    if (!success) {
-      res.status(500).json({ error: "Failed to send broadcast" });
-      return;
-    }
-
-    res.json({
-      message: scheduledAt
-        ? `Broadcast scheduled successfully for ${scheduledAt}`
-        : "Broadcast sent successfully",
-      broadcastId,
-    });
-  } catch (err) {
-    console.error("Error sending broadcast:", err);
-    res.status(500).json({ error: "Failed to send broadcast" });
-  }
-});
 
 // Start server
 app.listen(PORT, () => {
