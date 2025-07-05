@@ -341,7 +341,7 @@ function setupScheduledTasks() {
   // Schedule weekly broadcast every Saturday at 10 AM
   // Cron format: minute hour day-of-month month day-of-week
   cron.schedule(
-    "25 10 * * 6",
+    "0 11 * * 6",
     async () => {
       console.log("Running scheduled weekly broadcast - Saturday 10 AM");
       try {
@@ -369,9 +369,9 @@ function setupScheduledTasks() {
     }
   );
 
-  // Schedule daily morning proverb to specific email address (3 PM)
+  // Schedule daily morning proverb to specific email address (11:30 AM Lagos time)
   cron.schedule(
-    "* 15 * * *",
+    "0 10 * * *",
     async () => {
       console.log("Running scheduled daily proverb email");
       try {
