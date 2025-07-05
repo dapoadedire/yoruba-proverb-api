@@ -3,6 +3,8 @@ export interface Proverb {
   proverb: string;
   translation: string;
   wisdom: string;
+  tags?: string[];
+  audioUrl?: string;
 }
 
 export interface ProverbsData {
