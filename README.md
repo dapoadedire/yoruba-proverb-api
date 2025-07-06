@@ -157,5 +157,4 @@ API_BASE_URL=http://localhost:3000
 RESEND_API_KEY=your_resend_api_key_here
 AUDIENCE_ID=your_audience_id_here
 EMAIL_FROM=Yoruba Proverbs <proverbs@yourubaproverbs.com>
-ADMIN_API_KEY=your_secure_admin_api_key_here
 ```
