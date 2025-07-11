@@ -258,7 +258,6 @@ app.get("/unsubscribe", async (req: Request, res: Response) => {
   }
 });
 
-
 // Start server
 app.listen(PORT, () => {
   console.log(`Yoruba Proverbs API running on port ${PORT}`);
@@ -271,7 +270,7 @@ app.listen(PORT, () => {
 
 // Setup scheduled tasks for automated emails
 function setupScheduledTasks() {
-  // Schedule weekly broadcast every Saturday at 10 AM
+  // Schedule weekly broadcast every Saturday at 11 AM
   // Cron format: minute hour day-of-month month day-of-week
   new Cron(
     "0 11 * * 6",
@@ -279,7 +278,7 @@ function setupScheduledTasks() {
       timezone: "Africa/Lagos", // Set to appropriate timezone
     },
     async () => {
-      console.log("Running scheduled weekly broadcast - Saturday 10 AM");
+      console.log("Running scheduled weekly broadcast - Saturday 11 AM");
       try {
         // Get a random proverb for the weekly broadcast
         const randomProverb =
@@ -302,14 +301,14 @@ function setupScheduledTasks() {
     }
   );
 
-  // Schedule daily morning proverb to specific email address (at 6:40 PM)
+  // Schedule daily morning proverb to specific email address (at 10:30 AM)
   new Cron(
-    "35 18 * * *",
+    "30 10 * * *",
     {
       timezone: "Africa/Lagos", // Set to appropriate timezone
     },
     async () => {
-      console.log("Running scheduled daily proverb email");
+      console.log("Running scheduled daily proverb email - 10:30 AM");
       try {
         const email = "adedireadedapo19@gmail.com";
         const name = "Adedapo"; // Default name for the daily email
