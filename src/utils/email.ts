@@ -56,7 +56,7 @@ export async function sendWelcomeEmail(
 
     const fromEmail =
       process.env.EMAIL_FROM ||
-      "Yoruba Proverbs <yorubaproverbs@dapoadedire.xyz>";
+      "Yoruba Proverbs <yorubaproverbs@dapoadedire.com>";
 
     // Use the direct emails.send method as specified
     const { data, error } = await resend.emails.send({
@@ -100,7 +100,7 @@ export async function sendDailyProverbEmail(
     const { data, error } = await resend.emails.send({
       from:
         process.env.EMAIL_FROM ||
-        "Yoruba Proverbs <yorubaproverbs@dapoadedire.xyz>",
+        "Yoruba Proverbs <yorubaproverbs@dapoadedire.com>",
       to: [email],
       subject: "Your Daily Yoruba Proverb - Morning Wisdom",
       html: htmlContent,
@@ -135,7 +135,7 @@ export async function createWeeklyBroadcast(
 
     const fromEmail =
       process.env.EMAIL_FROM ||
-      "Yoruba Proverbs <yorubaproverbs@dapoadedire.xyz>";
+      "Yoruba Proverbs <yorubaproverbs@dapoadedire.com>";
 
     // Create HTML content for broadcast
     const htmlContent = compileTemplate("weekly-proverb", {
