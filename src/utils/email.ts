@@ -30,6 +30,9 @@ function compileTemplate(
       content = content.replace(regex, value);
     });
 
+    // Inject current year for copyright
+    content = content.replace(/{{year}}/g, new Date().getFullYear().toString());
+
     return content;
   } catch (error) {
     console.error(`Error compiling template ${templateName}:`, error);

@@ -2,80 +2,192 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Your Weekly Yoruba Proverb</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0eeeb;
+        font-family: 'Segoe UI', 'Helvetica Neue', Roboto, Tahoma, Geneva, Verdana, sans-serif;
+        color: #2c2c2c;
         line-height: 1.6;
-        color: #333;
+      }
+      .wrapper {
+        width: 100%;
         max-width: 600px;
         margin: 0 auto;
-        padding: 20px;
+        background-color: #fdfbf7;
       }
       .header {
+        background-color: #1a3a5c;
+        padding: 40px 30px;
         text-align: center;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #eee;
       }
-      .proverb {
-        margin: 30px 0;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-left: 4px solid #5a6f8d;
+      .header h1 {
+        color: #ffffff;
+        font-size: 22px;
+        font-weight: 300;
+        margin: 0;
+        letter-spacing: 1px;
+        font-family: Georgia, 'Times New Roman', serif;
+      }
+      .header p {
+        color: #b8c5d3;
+        font-size: 13px;
+        margin: 8px 0 0 0;
+        font-weight: 300;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .date-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #8a8a8a;
+        margin-bottom: 25px;
+      }
+      .greeting {
+        font-size: 16px;
+        margin-bottom: 25px;
+        color: #555555;
+      }
+      .proverb-card {
+        background-color: #ffffff;
+        padding: 35px;
+        margin: 25px 0;
       }
       .yoruba {
-        font-style: italic;
-        color: #5a6f8d;
-        font-size: 18px;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 24px;
+        line-height: 1.5;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+      }
+      .divider-small {
+        width: 40px;
+        height: 1px;
+        background-color: #d0ccc7;
+        margin: 20px 0;
       }
       .translation {
-        margin-top: 10px;
-        font-size: 16px;
+        font-size: 15px;
+        color: #555555;
+        line-height: 1.6;
+      }
+      .wisdom-box {
+        background-color: #f0f4f8;
+        border-radius: 4px;
+        padding: 22px;
+        margin-top: 25px;
+      }
+      .wisdom-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #1a3a5c;
+        margin-bottom: 10px;
+        font-weight: 600;
       }
       .wisdom {
-        margin-top: 15px;
-        font-weight: bold;
+        font-size: 15px;
+        color: #333333;
+        font-style: italic;
+        line-height: 1.5;
+      }
+      .cta {
+        text-align: center;
+        margin-top: 30px;
+      }
+      .cta a {
+        display: inline-block;
+        padding: 12px 28px;
+        background-color: #1a3a5c;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+        letter-spacing: 0.5px;
       }
       .footer {
-        margin-top: 30px;
+        background-color: #f0eeeb;
+        padding: 30px;
         text-align: center;
         font-size: 12px;
-        color: #777;
+        color: #888888;
+      }
+      .footer a {
+        color: #1a3a5c;
+        text-decoration: none;
+      }
+      @media screen and (max-width: 600px) {
+        .content, .header {
+          padding: 30px 20px !important;
+        }
+        .yoruba {
+          font-size: 21px !important;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="header">
-      <h1>Your Weekly Yoruba Proverb</h1>
-    </div>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+      <tr>
+        <td align="center" style="padding: 20px 0;">
+          <table role="presentation" class="wrapper" cellspacing="0" cellpadding="0" border="0" width="600">
+            <tr>
+              <td class="header">
+                <h1>Ọ̀rọ̀ Àgbà</h1>
+                <p>Saturday Wisdom &mdash; Your Weekly Proverb</p>
+              </td>
+            </tr>
+            <tr>
+              <td class="content">
+                <div class="date-label">{{date}}</div>
+                <p class="greeting">Hello {{name}},</p>
+                <p class="greeting">
+                  Here is this week's proverb. Take a moment to sit with it.
+                </p>
 
-    <p>Hello {{name}},</p>
+                <div class="proverb-card">
+                  <div class="yoruba">{{proverb}}</div>
+                  <div class="divider-small"></div>
+                  <div class="translation">{{translation}}</div>
+                  <div class="wisdom-box">
+                    <div class="wisdom-label">Wisdom</div>
+                    <div class="wisdom">{{wisdom}}</div>
+                  </div>
+                </div>
 
-    <p>Here's your Saturday dose of Yoruba wisdom for this week:</p>
+                <p class="greeting" style="text-align: center; margin-top: 30px;">
+                  For more proverbs, visit 
+                  <a href="https://yorubaproverbs.vercel.app/" style="color: #1a3a5c; text-decoration: none; border-bottom: 1px solid #1a3a5c;">yorubaproverbs.vercel.app</a>
+                </p>
 
-    <div class="proverb">
-      <div class="yoruba">{{proverb}}</div>
-      <div class="translation">{{translation}}</div>
-      <div class="wisdom">Wisdom: {{wisdom}}</div>
-    </div>
+                <p class="greeting" style="text-align: center; font-size: 14px;">
+                  Look forward to another proverb next Saturday.
+                </p>
 
-    <p>
-      I hope this proverb brings insight to your week ahead. Look forward to
-      another proverb next Saturday.
-    </p>
-
-    <p>
-      For a full library of Yoruba proverbs, visit
-      <a href="https://yorubaproverbs.vercel.app/">yorubaproverbs.vercel.app</a>
-      anytime.
-    </p>
-
-    <p>Best regards,<br />Adedapo Adedire</p>
-
-    <div class="footer">
-      <p>
-        If you wish to unsubscribe, <a href="{{unsubscribeUrl}}">click here</a>.
-      </p>
-    </div>
+                <p class="greeting" style="text-align: center; margin-top: 25px;">
+                  With respect,<br />
+                  <strong>Adedapo Adedire</strong>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td class="footer">
+                <p>
+                  Want to pause these proverbs? <a href="{{unsubscribeUrl}}">Unsubscribe here</a>
+                </p>
+                <p style="margin-top: 10px; font-size: 11px; color: #aaaaaa;">
+                  &copy; {{year}} Ọ̀rọ̀ Àgbà &mdash; Yoruba Proverbs Collection
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
   </body>
 </html>

@@ -242,13 +242,73 @@ app.get("/unsubscribe", async (req: Request, res: Response) => {
       throw new Error("Failed to unsubscribe");
     }
 
-    // Respond with a simple HTML page
+    // Respond with a styled HTML page matching Option A design
     res.send(`
+      <!doctype html>
       <html>
-        <body style="font-family: Arial, sans-serif; text-align: center; padding: 40px;">
-          <h1>Unsubscribed Successfully</h1>
-          <p>You have been unsubscribed from the Yoruba Proverbs email list.</p>
-          <p>We're sorry to see you go!</p>
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Unsubscribed</title>
+          <style>
+            body {
+              margin: 0;
+              padding: 0;
+              background-color: #f0eeeb;
+              font-family: 'Segoe UI', 'Helvetica Neue', Roboto, Tahoma, Geneva, Verdana, sans-serif;
+              color: #2c2c2c;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              min-height: 100vh;
+            }
+            .card {
+              background-color: #fdfbf7;
+              max-width: 500px;
+              width: 90%;
+              padding: 50px 40px;
+              text-align: center;
+              border-top: 4px solid #1a3a5c;
+            }
+            h1 {
+              font-family: Georgia, 'Times New Roman', serif;
+              color: #1a3a5c;
+              font-size: 28px;
+              font-weight: 400;
+              margin: 0 0 20px 0;
+            }
+            p {
+              font-size: 16px;
+              color: #555555;
+              line-height: 1.6;
+              margin: 0 0 15px 0;
+            }
+            .divider {
+              width: 40px;
+              height: 1px;
+              background-color: #d0ccc7;
+              margin: 25px auto;
+            }
+            .footer-text {
+              font-size: 13px;
+              color: #888888;
+              margin-top: 20px;
+            }
+            @media screen and (max-width: 600px) {
+              .card {
+                padding: 40px 25px;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <h1>Unsubscribed</h1>
+            <div class="divider"></div>
+            <p>You have been removed from the Yoruba Proverbs email list.</p>
+            <p>If you ever wish to return, you are always welcome to subscribe again.</p>
+            <p class="footer-text">&mdash; Adedapo Adedire &middot; &copy; ${new Date().getFullYear()}</p>
+          </div>
         </body>
       </html>
     `);
