@@ -7,178 +7,76 @@
     <style>
       body {
         margin: 0;
-        padding: 0;
-        background-color: #f0eeeb;
-        font-family: 'Segoe UI', 'Helvetica Neue', Roboto, Tahoma, Geneva, Verdana, sans-serif;
-        color: #2c2c2c;
+        padding: 24px 0;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         line-height: 1.6;
       }
       .wrapper {
         width: 100%;
-        max-width: 600px;
+        max-width: 520px;
         margin: 0 auto;
-        background-color: #fdfbf7;
-      }
-      .header {
-        background-color: #1a3a5c;
-        padding: 40px 30px;
-        text-align: center;
-      }
-      .header h1 {
-        color: #ffffff;
-        font-size: 22px;
-        font-weight: 300;
-        margin: 0;
-        letter-spacing: 1px;
-        font-family: Georgia, 'Times New Roman', serif;
-      }
-      .header p {
-        color: #b8c5d3;
-        font-size: 13px;
-        margin: 8px 0 0 0;
-        font-weight: 300;
       }
       .content {
-        padding: 40px 30px;
-      }
-      .date-label {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: #8a8a8a;
-        margin-bottom: 25px;
+        padding: 0 24px;
       }
       .greeting {
         font-size: 16px;
-        margin-bottom: 25px;
-        color: #555555;
-      }
-      .proverb-card {
-        background-color: #ffffff;
-        padding: 35px;
-        margin: 25px 0;
+        margin-bottom: 24px;
       }
       .yoruba {
-        font-family: Georgia, 'Times New Roman', serif;
         font-size: 24px;
         line-height: 1.5;
-        color: #1a1a1a;
-        margin-bottom: 20px;
-      }
-      .divider-small {
-        width: 40px;
-        height: 1px;
-        background-color: #d0ccc7;
-        margin: 20px 0;
+        margin-bottom: 16px;
       }
       .translation {
         font-size: 15px;
-        color: #555555;
-        line-height: 1.6;
-      }
-      .wisdom-box {
-        background-color: #f0f4f8;
-        border-radius: 4px;
-        padding: 22px;
-        margin-top: 25px;
-      }
-      .wisdom-label {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: #1a3a5c;
-        margin-bottom: 10px;
-        font-weight: 600;
+        margin-bottom: 16px;
       }
       .wisdom {
         font-size: 15px;
-        color: #333333;
         font-style: italic;
-        line-height: 1.5;
+        margin-bottom: 32px;
       }
-      .closing {
-        text-align: center;
-        margin-top: 30px;
+      .signoff {
         font-size: 15px;
-        color: #555555;
-      }
-      .closing a {
-        color: #1a3a5c;
-        text-decoration: none;
-        border-bottom: 1px solid #1a3a5c;
       }
       .footer {
-        background-color: #f0eeeb;
-        padding: 30px;
-        text-align: center;
+        margin-top: 40px;
+        padding-top: 16px;
         font-size: 12px;
-        color: #888888;
       }
-      .footer a {
-        color: #1a3a5c;
+      .brand {
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 24px;
+      }
+      .brand a {
         text-decoration: none;
       }
-      @media screen and (max-width: 600px) {
-        .content, .header {
-          padding: 30px 20px !important;
-        }
-        .yoruba {
-          font-size: 21px !important;
-        }
+      .footer a {
+        text-decoration: underline;
       }
     </style>
   </head>
   <body>
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
       <tr>
-        <td align="center" style="padding: 20px 0;">
-          <table role="presentation" class="wrapper" cellspacing="0" cellpadding="0" border="0" width="600">
-            <tr>
-              <td class="header">
-                <h1>Ọ̀rọ̀ Àgbà</h1>
-                <p>Morning Wisdom &mdash; Your Daily Proverb</p>
-              </td>
-            </tr>
+        <td align="center">
+          <table role="presentation" class="wrapper" cellspacing="0" cellpadding="0" border="0" width="520">
             <tr>
               <td class="content">
-                <div class="date-label">{{date}}</div>
                 <p class="greeting">Hello {{name}},</p>
-                <p class="greeting">
-                  Here is your morning proverb. A small moment of reflection to start your day.
-                </p>
 
-                <div class="proverb-card">
-                  <div class="yoruba">{{proverb}}</div>
-                  <div class="divider-small"></div>
-                  <div class="translation">{{translation}}</div>
-                  <div class="wisdom-box">
-                    <div class="wisdom-label">Wisdom</div>
-                    <div class="wisdom">{{wisdom}}</div>
-                  </div>
+                <div class="yoruba">{{proverb}}</div>
+                <div class="translation">{{translation}}</div>
+                <div class="wisdom">{{wisdom}}</div>
+
+                <p class="signoff">— <a href="https://dapoadedire.com/">Adedapo Adedire</a></p>
+
+                <div class="footer">
+                  <a href="{{unsubscribeUrl}}">Unsubscribe</a>
+                  <p><a href="https://yorubaproverbs.dapoadedire.com/">&copy; {{year}} Yoruba Proverbs</a></p>
                 </div>
-
-                <p class="closing">
-                  For more proverbs, visit <a href="https://yorubaproverbs.vercel.app/">yorubaproverbs.vercel.app</a>
-                </p>
-
-                <p class="closing" style="margin-top: 20px; font-size: 14px;">
-                  Another proverb awaits you tomorrow morning.
-                </p>
-
-                <p class="closing" style="margin-top: 25px;">
-                  With respect,<br />
-                  <strong>Adedapo Adedire</strong>
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td class="footer">
-                <p>
-                  Want to pause these proverbs? <a href="{{unsubscribeUrl}}">Unsubscribe here</a>
-                </p>
-                <p style="margin-top: 10px; font-size: 11px; color: #aaaaaa;">
-                  &copy; {{year}} Ọ̀rọ̀ Àgbà &mdash; Yoruba Proverbs Collection
-                </p>
               </td>
             </tr>
           </table>
